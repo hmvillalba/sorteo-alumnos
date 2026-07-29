@@ -200,12 +200,12 @@ function reproducirTono({ frequency, duration, type = 'sine', volume = 0.03, att
 
 function reproducirClickRuleta() {
     reproducirTono({
-        frequency: 900 + Math.random() * 180,
-        duration: 0.03,
-        type: 'square',
-        volume: 0.018,
+        frequency: 720 + Math.random() * 160,
+        duration: 0.085,
+        type: 'triangle',
+        volume: 0.14,
         attack: 0.001,
-        release: 0.03
+        release: 0.1
     });
 }
 
@@ -224,12 +224,12 @@ function reproducirSonidoGanador() {
         oscillator.type = 'triangle';
         oscillator.frequency.setValueAtTime(note.frequency, now + note.offset);
         gainNode.gain.setValueAtTime(0.0001, now + note.offset);
-        gainNode.gain.linearRampToValueAtTime(0.05, now + note.offset + 0.01);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + note.offset + note.duration);
+        gainNode.gain.linearRampToValueAtTime(0.16, now + note.offset + 0.015);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + note.offset + note.duration + 0.12);
         oscillator.connect(gainNode);
         gainNode.connect(ctx.destination);
         oscillator.start(now + note.offset);
-        oscillator.stop(now + note.offset + note.duration);
+        oscillator.stop(now + note.offset + note.duration + 0.12);
     });
 }
 
