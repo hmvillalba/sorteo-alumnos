@@ -772,10 +772,15 @@ function animarGiro() {
             return;
         }
 
-        const tiempoGiro = 4000;
-        const girosExtra = 5;
-        const anguloObjetivo = Math.random() * Math.PI * 2;
-        const distanciaTotal = (Math.PI * 2 * girosExtra) + anguloObjetivo;
+        const arco = (Math.PI * 2) / disponibles.length;
+        const indiceGanador = Math.floor(Math.random() * disponibles.length);
+        const tiempoGiro = 3600 + Math.random() * 1000;
+        const girosExtra = 5 + Math.floor(Math.random() * 3);
+        const anguloCentroGanador = (-Math.PI / 2) - ((indiceGanador + 0.5) * arco);
+        const anguloInicialNormalizado = ((anguloActual % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
+        const anguloObjetivoNormalizado = ((anguloCentroGanador % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
+        const deltaObjetivo = ((anguloObjetivoNormalizado - anguloInicialNormalizado) + (Math.PI * 2)) % (Math.PI * 2);
+        const distanciaTotal = (Math.PI * 2 * girosExtra) + deltaObjetivo;
         let ultimoTick = 0;
 
         let tiempoInicio = null;
@@ -801,7 +806,9 @@ function animarGiro() {
                 return;
             }
 
-            procesarGanador();
+            anguloActual = anguloInicialGiro + distanciaTotal;
+            dibujarRuleta();
+            procesarGanador(disponibles[indiceGanador]);
             resolve();
         }
 
@@ -809,17 +816,7 @@ function animarGiro() {
     });
 }
 
-function procesarGanador() {
-    const disponibles = obtenerDisponibles();
-    if (disponibles.length === 0) return;
-
-    const arco = (Math.PI * 2) / disponibles.length;
-    const anguloNormalizado = ((anguloActual % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
-    const indiceGanador = Math.floor(
-        (((Math.PI * 2) - anguloNormalizado - (Math.PI / 2) + (Math.PI * 2)) % (Math.PI * 2)) / arco
-    ) % disponibles.length;
-
-    const alumnoGanador = disponibles[indiceGanador];
+function procesarGanador(alumnoGanador) {
     if (!alumnoGanador) return;
 
     const div = document.createElement('div');
